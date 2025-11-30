@@ -1,8 +1,6 @@
 import axios from "axios";
-
 axios.defaults.withCredentials = true;
 const API = axios.create({ baseURL: "/api" }); 
-
 let accessToken = null;
 
 API.interceptors.request.use(config => {
@@ -11,10 +9,9 @@ API.interceptors.request.use(config => {
 });
 
 // --- AUTHENTICATION FUNCTIONS ---
-
 export const registerUser = async (formData) => {
     try {
-        const res = await API.post(`/auth/register`, formData, {
+        const res = await API.post("/auth/register", formData, {
             headers: { "Content-Type": "application/json" },
         });
         return res.data;
@@ -28,7 +25,6 @@ export const loginUser = async (formData) => {
     const res = await API.post("/auth/login", formData, {
       headers: { "Content-Type": "application/json" },
     });
-
     if (res.data.success) {
       accessToken = res.data.data.accessToken;
     }
@@ -59,22 +55,18 @@ export const getLoggedInUser = async () => {
 export const logoutUser = async () => {
   try {
     const res = await API.post("/auth/logout");
-    // clear in-memory access token on logout
     accessToken = null;
     return res.data;
   } catch (error) {
-    // ensure token is cleared even if request fails
     accessToken = null;
     return { success: false, message: "Logout failed" };
   }
 };
 
 // --- TODO CRUD FUNCTIONS ---
-
-// Create a new Todo
 export const createTodo = async (newToDo) => {
   try {
-    const res = await API.post(`/todos`, newToDo);
+    const res = await API.post("/todos", newToDo);
     return res.data;
   } catch (error) {
     console.error("Create Todo Error:", error);
@@ -82,10 +74,9 @@ export const createTodo = async (newToDo) => {
   }
 };
 
-// Get all Todos
 export const getTodo = async () => {
   try {
-    const res = await API.get(`/todos`);
+    const res = await API.get("/todos");
     return res.data;
   } catch (error) {
     console.error("Get Todos Error:", error);
@@ -93,7 +84,6 @@ export const getTodo = async () => {
   }
 };
 
-// Update a Todo
 export const updateTodo = async (id, updates) => {
   try {
     const res = await API.put(`/todos/${id}`, updates);
@@ -104,7 +94,6 @@ export const updateTodo = async (id, updates) => {
   }
 };
 
-// Delete a Todo
 export const deleteTodo = async (id) => {
   try {
     const res = await API.delete(`/todos/${id}`);
