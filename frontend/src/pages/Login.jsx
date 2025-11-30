@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { Registeration } from "./Rgisteration";
 import { TodoList } from "./protected-route/TodoList";
@@ -32,6 +32,14 @@ export const Login = () => {
     }
     setSuccessMessage("Login successful");
   };
+
+  // Clear messages when user becomes null (e.g. after logout)
+  useEffect(() => {
+    if (!user) {
+      setErrorMessage("");
+      setSuccessMessage("");
+    }
+  }, [user]);
 
   if (loading) return <p>Loading...</p>;
   if (user) return <TodoList />;
