@@ -7,6 +7,7 @@ import {
 } from "../../services/api";
 import { InputField } from "../../components/InputField";
 import { useAuth } from "../../context/AuthContext";
+import logo from "../../assets/logo.png";
 
 const TodoItem = ({
   item,
@@ -413,8 +414,9 @@ export const TodoList = () => {
         </h2>
       </div>
 
-      <h3 className="text-2xl font-bold text-gray-700 mb-6 border-b pb-2">
-        📓 To Do List
+      <h3 className="flex items-center text-2xl font-bold text-gray-700 mb-6 border-b pb-2">
+        <img src={logo} alt="Logo" className="w-8 h-8 mr-2" />
+        To Do List
       </h3>
 
       {validationError && (
