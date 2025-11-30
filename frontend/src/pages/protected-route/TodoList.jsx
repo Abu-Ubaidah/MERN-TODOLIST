@@ -414,7 +414,7 @@ export const TodoList = () => {
       </div>
 
       <h3 className="text-2xl font-bold text-gray-700 mb-6 border-b pb-2">
-        📓 Your Tasks
+        📓 To Do List
       </h3>
 
       {validationError && (
@@ -460,7 +460,7 @@ export const TodoList = () => {
             value={formData.title}
             onChange={handleChange}
             className="bg-gray-50 p-3 border rounded-lg w-full focus:ring-2 focus:ring-blue-400 outline-none"
-            placeholder="What needs to be done?"
+            placeholder="Title Here"
           />
         </InputField>
 
@@ -515,7 +515,7 @@ export const TodoList = () => {
               value={formData.description}
               onChange={handleChange}
               className="bg-gray-50 p-3 border rounded-lg w-full resize-none"
-              placeholder="Task details..."
+              placeholder="Write ToDo details..."
               rows="3"
             />
           </InputField>
