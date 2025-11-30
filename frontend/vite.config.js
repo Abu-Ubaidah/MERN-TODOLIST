@@ -12,6 +12,8 @@ export default defineConfig({
     tailwindcss(),
   ],
   server: {
+    port: 5173,
+    host: true,
     proxy: {
       '/api': {
         target: process.env.BACKEND_URL, // This must match the .env key
