@@ -6,6 +6,7 @@ dotenv.config();
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: '/todolist/',      
   plugins: [
     react(),
     tailwindcss(),
@@ -14,7 +15,7 @@ export default defineConfig({
     proxy: {
       '/api': {
         target: process.env.BACKEND_URL, // This must match the .env key
-        changeOrigin:true,
+        changeOrigin: true,
       }
     }
   }
