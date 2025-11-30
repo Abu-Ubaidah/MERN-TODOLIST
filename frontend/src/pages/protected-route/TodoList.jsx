@@ -123,7 +123,6 @@ const TodoItem = ({
     );
   }
 
-
   return (
     <div
       className={`p-6 bg-white rounded-lg shadow-md ${borderColor} hover:shadow-lg transition-shadow flex items-start space-x-4`}
@@ -131,7 +130,7 @@ const TodoItem = ({
       <input
         type="checkbox"
         checked={isCompleted}
-        onChange={() => onStatusToggle(item._id, isCompleted)} 
+        onChange={() => onStatusToggle(item._id, isCompleted)}
         className="w-5 h-5 mt-1 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500"
       />
 
@@ -218,6 +217,7 @@ export const TodoList = () => {
   const [isAdding, setIsAdding] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [isDeletingId, setIsDeletingId] = useState(null);
+  const [pendingDeleteId, setPendingDeleteId] = useState(null);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   // Fetch Todos
@@ -344,9 +344,14 @@ export const TodoList = () => {
     }
   };
 
-  const handleDelete = async (id) => {
-    if (!window.confirm("Delete this task?")) return;
+  const handleDelete = (id) => {
+    // Start a delete confirmation flow (no window.confirm)
+    setPendingDeleteId(id);
+  };
 
+  const confirmDelete = async () => {
+    const id = pendingDeleteId;
+    if (!id) return;
     try {
       setOperationError("");
       setIsDeletingId(id);
@@ -357,7 +362,12 @@ export const TodoList = () => {
       setOperationError("Failed to delete task.");
     } finally {
       setIsDeletingId(null);
+      setPendingDeleteId(null);
     }
+  };
+
+  const cancelDelete = () => {
+    setPendingDeleteId(null);
   };
 
   const handleLogout = async () => {
@@ -371,7 +381,6 @@ export const TodoList = () => {
     }
   };
 
-
   if (isLoggingOut) {
     return (
       <div className="fixed inset-0 bg-white flex items-center justify-center z-50 transition-opacity duration-300">
@@ -381,7 +390,6 @@ export const TodoList = () => {
       </div>
     );
   }
-
 
   return (
     <div className="max-w-3xl w-full sm:p-8 p-4 mx-auto mt-10 bg-amber-50 rounded-lg shadow-xl">
@@ -423,6 +431,25 @@ export const TodoList = () => {
           role="alert"
         >
           {operationError}
+        </div>
+      )}
+      {pendingDeleteId && (
+        <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 p-4 mb-4 flex items-center justify-between">
+          <div>Are you sure you want to delete this task?</div>
+          <div className="flex gap-2">
+            <button
+              onClick={cancelDelete}
+              className="px-3 py-1 bg-gray-200 rounded"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={confirmDelete}
+              className="px-3 py-1 bg-red-500 text-white rounded"
+            >
+              Delete
+            </button>
+          </div>
         </div>
       )}
 

@@ -34,7 +34,7 @@ export const loginUser = async (formData) => {
     }
     return res.data;
   } catch (error) {
-    return { success: false, message: "Login failed" };
+    return error.response?.data || { success: false, message: "Login failed" };
   }
 };
 
@@ -57,7 +57,16 @@ export const getLoggedInUser = async () => {
 };
 
 export const logoutUser = async () => {
-  return await API.post("/auth/logout");
+  try {
+    const res = await API.post("/auth/logout");
+    // clear in-memory access token on logout
+    accessToken = null;
+    return res.data;
+  } catch (error) {
+    // ensure token is cleared even if request fails
+    accessToken = null;
+    return { success: false, message: "Logout failed" };
+  }
 };
 
 // --- TODO CRUD FUNCTIONS ---

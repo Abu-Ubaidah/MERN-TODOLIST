@@ -1,12 +1,13 @@
 import { useState } from "react";
-import {Login} from "./Login"
+import { Login } from "./Login";
 import { registerUser } from "../services/api.js";
 
-
-export const Registeration = () =>{
+export const Registeration = () => {
   const [loginPage, setLoginPage] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isRegistered, setIsRegistered] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
   const [userDetails, setUserDetails] = useState({
     name: "",
     email: "",
@@ -19,69 +20,101 @@ export const Registeration = () =>{
   };
 
   const handleSubmit = async () => {
+    setErrorMessage("");
+    setSuccessMessage("");
     const res = await registerUser(userDetails);
     if (res.success) {
-      alert(res.message);
+      setSuccessMessage(res.message || "Registration successful");
       setIsRegistered(true);
     } else {
-      alert(res.message);
+      setErrorMessage(res.message || "Registration failed");
     }
   };
 
-  if(loginPage || isRegistered) return <Login/>;
-
+  if (loginPage) return <Login />;
 
   return (
     <>
-        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-          <div className="bg-white shadow-md rounded-2xl p-8 w-full max-w-md">
-            <h1 className="text-2xl font-semibold text-gray-800 mb-6 text-center">
-              Register
-            </h1>
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+        <div className="bg-white shadow-md rounded-2xl p-8 w-full max-w-md">
+          {errorMessage && (
+            <div
+              className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4"
+              role="alert"
+            >
+              {errorMessage}
+            </div>
+          )}
+          {successMessage && (
+            <div
+              className="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4"
+              role="status"
+            >
+              {successMessage}
+            </div>
+          )}
+          <h1 className="text-2xl font-semibold text-gray-800 mb-6 text-center">
+            Register
+          </h1>
 
-            <form className="flex flex-col gap-4">
-              <input
-                name="name"
-                onChange={handleChange}
-                value={userDetails.name}
-                type="text"
-                placeholder="Full Name"
-                className="border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
+          <form className="flex flex-col gap-4">
+            <input
+              name="name"
+              onChange={handleChange}
+              value={userDetails.name}
+              type="text"
+              placeholder="Full Name"
+              className="border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
 
-              <input
-                name="email"
-                onChange={handleChange}
-                value={userDetails.email}
-                type="email"
-                placeholder="Email Address"
-                className="border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
+            <input
+              name="email"
+              onChange={handleChange}
+              value={userDetails.email}
+              type="email"
+              placeholder="Email Address"
+              className="border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
 
-              <input
-                name="password"
-                onChange={handleChange}
-                value={userDetails.password}
-                type="password"
-                placeholder="Password"
-                className="border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
+            <input
+              name="password"
+              onChange={handleChange}
+              value={userDetails.password}
+              type="password"
+              placeholder="Password"
+              className="border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
 
+            <button
+              onClick={handleSubmit}
+              type="button"
+              className="bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600 transition-colors"
+            >
+              Create Account
+            </button>
+          </form>
+
+          <p className="text-gray-500 text-sm mt-4 text-center">
+            Already have an account?{" "}
+            <span
+              className="text-blue-500 hover:underline cursor-pointer"
+              onClick={() => setLoginPage(true)}
+            >
+              Login
+            </span>
+          </p>
+          {isRegistered && (
+            <div className="mt-4 text-center">
               <button
-                onClick={handleSubmit}
-                type="button"
-                className="bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600 transition-colors"
+                onClick={() => setLoginPage(true)}
+                className="text-blue-500 hover:underline"
               >
-                Create Account
+                Proceed to Login
               </button>
-            </form>
-
-            <p className="text-gray-500 text-sm mt-4 text-center">
-              Already have an account?{" "}
-              <span className="text-blue-500 hover:underline cursor-pointer" onClick={()=>setLoginPage(true)}>Login</span>
-            </p>
-          </div>
+            </div>
+          )}
         </div>
+      </div>
     </>
-    );
-}
+  );
+};

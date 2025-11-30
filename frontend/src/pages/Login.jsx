@@ -7,6 +7,8 @@ export const Login = () => {
   const { login, user, loading } = useContext(AuthContext);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [isRegisterPage, setRegisterPage] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
   const [userDetails, setUserDetails] = useState({
     identifier: "",
     password: "",
@@ -19,13 +21,16 @@ export const Login = () => {
 
   const handleSubmit = async () => {
     setIsLoggingIn(true);
+    setErrorMessage("");
+    setSuccessMessage("");
     const res = await login(userDetails);
     setIsLoggingIn(false);
 
     if (!res.success) {
-      alert(res.message || "Login failed!");
+      setErrorMessage(res.message || "Login failed!");
       return;
     }
+    setSuccessMessage("Login successful");
   };
 
   if (loading) return <p>Loading...</p>;
@@ -36,6 +41,22 @@ export const Login = () => {
     <>
       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
         <div className="bg-white shadow-md rounded-2xl p-8 w-full max-w-md">
+          {errorMessage && (
+            <div
+              className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4"
+              role="alert"
+            >
+              {errorMessage}
+            </div>
+          )}
+          {successMessage && (
+            <div
+              className="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4"
+              role="status"
+            >
+              {successMessage}
+            </div>
+          )}
           <h1 className="text-2xl font-semibold text-gray-800 mb-6 text-center">
             Login
           </h1>

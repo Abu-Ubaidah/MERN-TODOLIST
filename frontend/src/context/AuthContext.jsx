@@ -17,7 +17,6 @@ export const AuthProvider = ({ children }) => {
     const res = await loginUser(formData);
 
     if (res.success) {
-
       setUser(res.data.user);
       return { success: true };
     } else {
@@ -26,7 +25,19 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = async () => {
-    await logoutUser();
+    try {
+      await logoutUser();
+    } catch (err) {
+      // ignore, we'll still clear client state
+      console.error("Logout error:", err);
+    }
+    // clear client-side stored data
+    try {
+      localStorage.clear();
+    } catch (e) {}
+    try {
+      sessionStorage.clear();
+    } catch (e) {}
     setUser(null);
   };
 
