@@ -5,7 +5,7 @@ import './index.css'
 import App from './App.jsx'
 
 createRoot(document.getElementById("root")).render(
-  <BrowserRouter>
+  <BrowserRouter basename="/todolist">
     <div className="min-h-screen bg-gray-100 py-10">
       <App />
     </div>
