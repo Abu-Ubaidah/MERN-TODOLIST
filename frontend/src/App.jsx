@@ -7,10 +7,8 @@ import "./App.css";
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
-
   if (loading) return <p>Loading...</p>;
-  if (!user) return <Navigate to="/login" />;
-
+  if (!user) return <Navigate to="/login" replace />;
   return children;
 }
 
@@ -18,11 +16,9 @@ export default function App() {
   return (
     <AuthProvider>
       <Routes>
-        <Route path="/" element={<Navigate to="/home" />} />
-
+        <Route path="/" element={<Navigate to="/home" replace />} />
         <Route path="/register" element={<Registeration />} />
         <Route path="/login" element={<Login />} />
-
         <Route
           path="/home"
           element={
@@ -31,6 +27,7 @@ export default function App() {
             </ProtectedRoute>
           }
         />
+        <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </AuthProvider>
   );

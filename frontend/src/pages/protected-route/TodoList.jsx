@@ -350,6 +350,43 @@ export const TodoList = () => {
     setPendingDeleteId(id);
   };
 
+ const DeleteConfirmModal = ({ show, onConfirm, onCancel }) => {
+   if (!show) return null;
+
+   return (
+     <div className="fixed inset-0 z-50 flex items-start justify-center bg-black/40 backdrop-blur-sm">
+       <div className="mt-24 bg-white rounded-xl shadow-2xl w-[90%] max-w-md p-6 animate-scale-in">
+         <h3 className="text-xl font-bold text-gray-800 mb-3">
+           Confirm Delete
+         </h3>
+
+         <p className="text-gray-600 mb-6">
+           Are you sure you want to delete this task?
+           <br />
+           This action cannot be undone.
+         </p>
+
+         <div className="flex justify-end gap-3">
+           <button
+             onClick={onCancel}
+             className="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition"
+           >
+             Cancel
+           </button>
+
+           <button
+             onClick={onConfirm}
+             className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
+           >
+             Delete
+           </button>
+         </div>
+       </div>
+     </div>
+   );
+ };
+
+
   const confirmDelete = async () => {
     const id = pendingDeleteId;
     if (!id) return;
@@ -416,7 +453,7 @@ export const TodoList = () => {
 
       <h3 className="flex items-center text-2xl font-bold text-gray-700 mb-6 border-b pb-2">
         <img src={logo} alt="Logo" className="w-8 h-8 mr-2" />
-        To Do List
+        Todo-List
       </h3>
 
       {validationError && (
@@ -435,25 +472,11 @@ export const TodoList = () => {
           {operationError}
         </div>
       )}
-      {pendingDeleteId && (
-        <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 p-4 mb-4 flex items-center justify-between">
-          <div>Are you sure you want to delete this task?</div>
-          <div className="flex gap-2">
-            <button
-              onClick={cancelDelete}
-              className="px-3 py-1 bg-gray-200 rounded"
-            >
-              Cancel
-            </button>
-            <button
-              onClick={confirmDelete}
-              className="px-3 py-1 bg-red-500 text-white rounded"
-            >
-              Delete
-            </button>
-          </div>
-        </div>
-      )}
+      <DeleteConfirmModal
+        show={!!pendingDeleteId}
+        onConfirm={confirmDelete}
+        onCancel={cancelDelete}
+      />
 
       <div className="bg-white p-6 rounded-lg shadow-sm mb-8 border border-gray-100">
         <InputField label="Title">
